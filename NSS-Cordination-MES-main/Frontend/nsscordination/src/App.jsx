@@ -43,12 +43,17 @@ import StudentRegister from "./pages/student/StudentRegister";
 import StudentProfile from "./pages/student/StudentProfile";
 import ViewFeedback from "./pages/cordinator/ViewFeedback";
 import StudentNotifications from "./pages/student/StudentNotifications";
+import ForgotPassword from "./pages/ForgotPassword";
+import ResetPassword from "./pages/ResetPassword";
 // import Cordinator from "./pages/Cordinator";
 
 function App() {
   return (
     <Routes>
       <Route path="/" element={<Login />} />
+      <Route path="/forgot-password" element={<ForgotPassword />} />
+<Route path="/reset-password" element={<ResetPassword />} />
+
 
       {/* Admin home with nested routes */}
       <Route path="/adminhome/*" element={<AdminHome />}>
@@ -88,6 +93,7 @@ function App() {
 
       {/* fallback */}
       <Route path="*" element={<Navigate to="/" replace />} />
+      
     </Routes>
   );
 }

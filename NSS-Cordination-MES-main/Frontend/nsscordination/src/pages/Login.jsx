@@ -49,36 +49,45 @@ function Login() {
         style={{ width: "380px", borderRadius: "12px" }}
       >
         <h3 className="text-center text-primary mb-3">NSS Coordination</h3>
+<form onSubmit={handleSubmit}>
+  {/* username */}
+  <div className="mb-3">
+    <label className="form-label fw-semibold">Username</label>
+    <input
+      type="text"
+      className="form-control"
+      placeholder="Enter username"
+      value={username}
+      onChange={(e) => setUsername(e.target.value)}
+      required
+    />
+  </div>
 
-        <form onSubmit={handleSubmit}>
-          <div className="mb-3">
-            <label className="form-label fw-semibold">Username</label>
-            <input
-              type="text"
-              className="form-control"
-              placeholder="Enter username"
-              value={username}
-              onChange={(e) => setUsername(e.target.value)}
-              required
-            />
-          </div>
+  {/* password */}
+  <div className="mb-3">
+    <label className="form-label fw-semibold">Password</label>
+    <input
+      type="password"
+      className="form-control"
+      placeholder="Enter password"
+      value={password}
+      onChange={(e) => setPassword(e.target.value)}
+      required
+    />
+  </div>
 
-          <div className="mb-3">
-            <label className="form-label fw-semibold">Password</label>
-            <input
-              type="password"
-              className="form-control"
-              placeholder="Enter password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              required
-            />
-          </div>
+  <button type="submit" className="btn btn-primary w-100 fw-semibold">
+    Login
+  </button>
+</form>
 
-          <button type="submit" className="btn btn-primary w-100 fw-semibold">
-            Login
-          </button>
-        </form>
+{/* 🔹 Forgot password link */}
+<div className="text-center mt-3">
+  <Link to="/forgot-password" className="text-decoration-none">
+    Forgot Password?
+  </Link>
+</div>
+
         <Link to = "/studentregister">
           <p className="text-center pt-3">New? Register Now</p>
         </Link>

@@ -11,6 +11,8 @@ function StudentNotifications() {
   const fetchNotifications = async () => {
     try {
       const res = await api.get(`/student/notifications/${student.regYear}`);
+      console.log(res);
+      
       setNotifications(res.data.notifications || []);
     } catch (err) {
       console.log(err);

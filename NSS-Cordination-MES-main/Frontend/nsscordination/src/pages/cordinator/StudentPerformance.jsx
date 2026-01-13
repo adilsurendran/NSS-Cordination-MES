@@ -12,6 +12,8 @@ function ViewStudentPerformanceCORD() {
   const fetchPerformances = async () => {
     try {
       const res = await api.get("/cordinator/performances");
+      console.log(res);
+      
       setPerformances(res.data.performances || []);
       setFiltered(res.data.performances || []);
     } catch (e) {

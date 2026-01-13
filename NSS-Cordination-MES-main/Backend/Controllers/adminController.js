@@ -368,3 +368,62 @@ export const getperformance = async(req,res)=>{
   }
 
 }
+
+
+import nodemailer from "nodemailer";
+
+export const forgotPassword = async (req, res) => {
+  const { email } = req.body;
+
+  const user = await LOGIN.findOne({ username:email });
+  if (!user) {
+    return res.status(404).json({ message: "User not found" });
+  }
+
+  // Generate 6-digit OTP
+  const otp = Math.floor(100000 + Math.random() * 900000).toString();
+
+  user.resetOtp = otp;
+  user.resetOtpExpire = Date.now() + 5 * 60 * 1000; // 5 minutes
+  await user.save();
+
+  // Email config (Gmail – free)
+  const transporter = nodemailer.createTransport({
+    service: "gmail",
+    auth: {
+      user: "nsscordination@gmail.com",
+      pass: "gnol nnef mauj zxcr",
+    },
+  });
+
+  await transporter.sendMail({
+    to: email,
+    subject: "Password Reset OTP",
+    html: `<h3>Your OTP is: ${otp}</h3><p>Valid for 5 minutes</p>`,
+  });
+
+  res.json({ message: "OTP sent to email" });
+};
+
+
+export const resetPassword = async (req, res) => {
+  const { email, otp, newPassword } = req.body;
+
+  const user = await LOGIN.findOne({
+    username:email,
+    resetOtp: otp,
+    resetOtpExpire: { $gt: Date.now() },
+  });
+
+  if (!user) {
+    return res.status(400).json({ message: "Invalid or expired OTP" });
+  }
+
+  user.password = await bcrypt.hash(newPassword, 10);
+  user.resetOtp = undefined;
+  user.resetOtpExpire = undefined;
+
+  await user.save();
+
+  res.json({ message: "Password changed successfully" });
+};

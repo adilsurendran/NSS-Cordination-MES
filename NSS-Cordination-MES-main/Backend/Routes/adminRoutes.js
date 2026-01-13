@@ -1,5 +1,5 @@
 import express from "express";
-import { addCoordinator, deletecord, editcordinator, getAllComplaints, getAllCoordinators, getperformance, getstudents, replyToComplaint,  } from "../Controllers/adminController.js";
+import { addCoordinator, deletecord, editcordinator, forgotPassword, getAllComplaints, getAllCoordinators, getperformance, getstudents, replyToComplaint, resetPassword,  } from "../Controllers/adminController.js";
 
 const  adminrouter = express.Router();
 
@@ -11,5 +11,8 @@ adminrouter.get("/complaints", getAllComplaints);
 adminrouter.put("/complaints/reply/:id", replyToComplaint);
 adminrouter.get("/students", getstudents);
 adminrouter.get("/performance", getperformance);
+adminrouter.post("/forgot-password", forgotPassword);
+adminrouter.put("/reset-password", resetPassword);
+
 
 export default adminrouter;

@@ -567,8 +567,6 @@ export const getVerifiedStudents = async (req, res) => {
     const students = await STUDENT.find({
       commonKey: { $in: loginVerifiedIds },
     });
-    // console.log(loginVerifiedIds,"loginVerifiedIds============================================")
-    // console.log(students,"students============================================")
     return res.json({
       success: true,
       students,
@@ -632,81 +630,81 @@ export const getVerifiedStudents = async (req, res) => {
 //   }
 // };
 
-export const getAttendanceByEvent = async (req, res) => {
-  try {
-    const { eventId } = req.params;
+  export const getAttendanceByEvent = async (req, res) => {
+    try {
+      const { eventId } = req.params;
 
-    const attendance = await ATTENDANCE.find({ eventId })
-      .select("studentId");
+      const attendance = await ATTENDANCE.find({ eventId })
+        .select("studentId");
 
-    const presentStudentIds = attendance.map(a => a.studentId.toString());
+      const presentStudentIds = attendance.map(a => a.studentId.toString());
 
-    return res.json({
-      success: true,
-      presentStudents: presentStudentIds,
-    });
+      return res.json({
+        success: true,
+        presentStudents: presentStudentIds,
+      });
 
-  } catch (error) {
-    console.log(error);
-    return res.status(500).json({
-      success: false,
-      message: "Error fetching attendance",
-    });
-  }
-};
-
-
-export const updateAttendance = async (req, res) => {
-  console.log(req.body);
-  
-  try {
-    const { eventId, presentStudents } = req.body;
-
-    if (!eventId) {
-      return res.status(400).json({ success: false, message: "Event ID required" });
-    }
-
-    // 1️⃣ Fetch all existing attendance records
-    const existing = await ATTENDANCE.find({ eventId }).select("studentId");
-    const existingIds = existing.map(a => a.studentId.toString());
-
-    // 2️⃣ Students to ADD
-    const toAdd = presentStudents.filter(id => !existingIds.includes(id));
-
-    // 3️⃣ Students to REMOVE
-    const toRemove = existingIds.filter(id => !presentStudents.includes(id));
-
-    // Insert ADD records
-    if (toAdd.length > 0) {
-      const docs = toAdd.map(id => ({
-        eventId,
-        studentId: id,
-        present: true
-      }));
-      await ATTENDANCE.insertMany(docs);
-    }
-
-    // Remove records
-    if (toRemove.length > 0) {
-      await ATTENDANCE.deleteMany({
-        eventId,
-        studentId: { $in: toRemove }
+    } catch (error) {
+      console.log(error);
+      return res.status(500).json({
+        success: false,
+        message: "Error fetching attendance",
       });
     }
+  };
 
-    return res.json({
-      success: true,
-      message: "Attendance updated successfully!",
-    });
 
-  } catch (error) {
-    console.log(error);
-    return res.status(500).json({
-      success: false,
-      message: "Error updating attendance",
-    });
-  }
-};
+  export const updateAttendance = async (req, res) => {
+    console.log(req.body);
+    
+    try {
+      const { eventId, presentStudents } = req.body;
+
+      if (!eventId) {
+        return res.status(400).json({ success: false, message: "Event ID required" });
+      }
+
+      // 1️⃣ Fetch all existing attendance records
+      const existing = await ATTENDANCE.find({ eventId }).select("studentId");
+      const existingIds = existing.map(a => a.studentId.toString());
+
+      // 2️⃣ Students to ADD
+      const toAdd = presentStudents.filter(id => !existingIds.includes(id));
+
+      // 3️⃣ Students to REMOVE
+      const toRemove = existingIds.filter(id => !presentStudents.includes(id));
+
+      // Insert ADD records
+      if (toAdd.length > 0) {
+        const docs = toAdd.map(id => ({
+          eventId,
+          studentId: id,
+          present: true
+        }));
+        await ATTENDANCE.insertMany(docs);
+      }
+
+      // Remove records
+      if (toRemove.length > 0) {
+        await ATTENDANCE.deleteMany({
+          eventId,
+          studentId: { $in: toRemove }
+        });
+      }
+
+      return res.json({
+        success: true,
+        message: "Attendance updated successfully!",
+      });
+
+    } catch (error) {
+      console.log(error);
+      return res.status(500).json({
+        success: false,
+        message: "Error updating attendance",
+      });
+    }
+  };
 
 
 
